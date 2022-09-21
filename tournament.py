@@ -5,6 +5,7 @@ import random
 teams = {}
 count = {}
 bracket= {}
+sortedTeams = {}
 
 afile = open("2018m.csv", "r")
 
@@ -89,30 +90,46 @@ def simulate_tournament(teams):
     """Simulate a tournament. Return name of winning team."""
     # TODO
     createBracket()
-    simulate_round(teams)
+
 
 
 
 def createBracket():
-    listedTeams = list(teams.keys())
-    listedRatings= list(teams.values())
-    listedRatings2= list(teams.values())
-    listedRatings.sort()
-    listedRatings2.sort(reverse = True)
+    teamsbyRating= list(teams.values())
+    lowSeed = []
+    highSeed = []
+    num = 0
+    for i in range(len(teamsbyRating)):
+        num = int(teamsbyRating[i])
+        teamsbyRating[i] = num
+
+    teamsbyRating.sort()
+    print(teamsbyRating)
+
+    for j in teamsbyRating:
+        team = findTeam(j)
+        sortedTeams[team] = j
+
+    print(sortedTeams)
+    length = len(teamsbyRating)-1
+    counter=0
+    matches = int(len(teamsbyRating) / 2)
+    #organicaly create bracket for whathever round we are in .
+    # i need to get the key .
+    for i in range(matches):
+        key = int(sortedTeams.get[])
+        value= int(sortedTeams[length])
+        print(key)
+        bracket[key] = bracket[value]
+        length =length-1
+
+
+
+    print(lowSeed)
 
 
 
 
-
-    tourneyMatchups = {}
-    tourneyLen = len(listedRatings)-1
-    counter =0
-    for i in  range(8):
-        team= findTeam(listedRatings[i])
-        lowerSeed= findTeam(listedRatings[tourneyLen])
-        bracket[team]= lowerSeed
-        tourneyLen= tourneyLen-1
-    print(bracket)
 
 
 
@@ -130,13 +147,12 @@ def createBracket():
 
 
 def findTeam(rating):
+    team=""
     for key,value in teams.items():
-        if rating == value:
+        L = int(value)
+        if rating == L:
              team= key
              break
-
-
-
     return team
 
 
