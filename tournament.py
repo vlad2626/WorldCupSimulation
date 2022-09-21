@@ -39,13 +39,36 @@ def simulate_game(team1, team2):
     #return the winner.
     rating1= 0
     rating2=0
-    for i in bracket:
+    dispWinner = " "
+    curRound = 0
+    counter = 0
+    winningTeam = []
+    # loop through original bracket.
+    for i,k in bracket.items():
+        print(i)
+        counter += 1
+        print("Current match " + str(counter))
         if team1== i:
-            rating1 = teams[team1]
+            rating1 = teams[i]
         if team2 ==i:
-            rating2 = teams[team2]
+            rating2 = teams[i]
+
         winner=getWinner(rating1,rating2)
-        print(" the winner of " , team1 , " VS" + team2 , " is " + str(winner) )
+
+        for key, value in teams.items():
+            if winner == value:
+                dispWinner = key
+                winningTeam.append(dispWinner)
+
+
+        if winner!= 0:
+            print(" the winner of ", team1, " VS " + team2, " is " + dispWinner)
+
+        else:
+            continue
+        counter+=1
+
+
 
 
 
@@ -55,11 +78,9 @@ def getWinner(rating1,rating2):
     algo = int(rating1) - int(rating2)
 
     if algo == 100:
-        winner= rating2  # when they are close rating 2 has a change of winning .
+       return rating2 # when they are close rating 2 has a change of winning .
     else:
-        winner=rating1
-
-    return winner
+        return rating1
 
 
 
@@ -91,7 +112,7 @@ def createBracket():
         lowerSeed= findTeam(listedRatings[tourneyLen])
         bracket[team]= lowerSeed
         tourneyLen= tourneyLen-1
-
+    print(bracket)
 
 
 
@@ -115,7 +136,7 @@ def findTeam(rating):
              break
 
 
-    print(team)
+
     return team
 
 
