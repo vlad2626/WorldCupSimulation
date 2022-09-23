@@ -3,10 +3,16 @@ import random
 
 # variables to hold team and dict to count how many wins per team
 teams = {}
+newTeams = {}
 count = {}
 bracket= {}
+round2 ={}
+round3 = {}
+round4 ={}
+losers =[]
+winners= []
 sortedTeams = {}
-
+currentRound = 0
 afile = open("2018m.csv", "r")
 
 for line in open("2018m.csv", "r"):
@@ -24,7 +30,6 @@ def simulate_game(team1, team2):
 def simulate_round(teams):
     """Simulate a round. Return a list of winning teams."""
     winners = []
-
     for key, value in bracket.items():
         simulate_game(key,value)
 
@@ -34,54 +39,71 @@ def simulate_round(teams):
 
 def simulate_game(team1, team2):
     """Simulate a game. Return True if team1 wins, False otherwise."""
-    #find the rating
-    #store rating in variable
-    # run algorithm to decide the match
-    #return the winner.
-    rating1= 0
-    rating2=0
-    dispWinner = " "
-    curRound = 0
-    counter = 0
-    winningTeam = []
-    # loop through original bracket.
-    for i,k in bracket.items():
-        print(i)
-        counter += 1
-        print("Current match " + str(counter))
-        if team1== i:
-            rating1 = teams[i]
-        if team2 ==i:
-            rating2 = teams[i]
-
-        winner=getWinner(rating1,rating2)
-
-        for key, value in teams.items():
-            if winner == value:
-                dispWinner = key
-                winningTeam.append(dispWinner)
+    #get winner returns the winner . add it to the list of winners. .
+    winner=getWinner(team1, team2)
+    winners.append(winner)
+    teamName1 = findTeam(team1)
+    teamName2 = findTeam(team2)
+    #changes rating to team name
+    winner= findTeam(winner)
+    print(teamName1 + " " + "VS " + teamName2 + " : Winner " + str(winner))
 
 
-        if winner!= 0:
-            print(" the winner of ", team1, " VS " + team2, " is " + dispWinner)
 
-        else:
-            continue
-        counter+=1
+
+
 
 
 
 
 
 def getWinner(rating1,rating2):
-    winner = 0
-    algo = 0
-    algo = int(rating1) - int(rating2)
 
+    algo = 0
+    algo = int(rating1) * int(rating2)  / 2
+    #loser
     if algo == 100:
-       return rating2 # when they are close rating 2 has a change of winning .
-    else:
-        return rating1
+       return rating1 # when they are close rating 2 has a change of winning .
+    else:#winner
+        losers.append(rating1)
+        return rating2
+
+
+
+
+def removeLoser():
+    # checks the loser bracket against the sorted teams. if the rating is not in the sorted teams. it is added to the new teams dict.
+    newTeams.clear()
+    counter = 0
+    index = 0
+    toDelete= []
+    # separates new winners from old ones.
+    print("Winning teams " + str(winners) + "\n")
+
+    for winner in winners:
+        counter
+        for loser in losers:
+            if winner == loser:
+                 index = counter
+                 toDelete.append(index)
+
+
+    #adds winners to new team
+    for i in range(len(toDelete)):
+        winners.pop(toDelete[i])
+
+    for winner in winners:
+        team = findTeam(winner)
+        newTeams[team] = winner
+
+
+
+
+
+
+
+
+
 
 
 
@@ -89,12 +111,64 @@ def getWinner(rating1,rating2):
 def simulate_tournament(teams):
     """Simulate a tournament. Return name of winning team."""
     # TODO
-    createBracket()
+
+    createBracket(teams)
+    simulate_round(teams)
+    removeLoser()
+    winners.clear()
+    losers.clear()
+    bracket.clear()
+    print(str(newTeams.items()) + " New Teams \n")
+
+    bracket.clear()
+    createBracket(newTeams)
+    simulate_round(teams)
+    removeLoser()
+    winners.clear()
+    losers.clear()
+    print(str(newTeams.items()) + " New Teams \n")
+
+    bracket.clear()
+    createBracket(newTeams)
+    simulate_round(teams)
+    removeLoser()
+    winners.clear()
+    losers.clear()
+    print(str(newTeams.items()) + " New Teams \n")
+
+    bracket.clear()
+    createBracket(newTeams)
+    simulate_round(teams)
+    removeLoser()
+    winners.clear()
+    losers.clear()
+    print(str(newTeams.items()) + " New Teams \n")
+
+
+    for key, value in newTeams.items():
+        print("the winner of the tournament is " + str(key) + " With a rating of " + str(value))
 
 
 
 
-def createBracket():
+
+
+
+
+def createBracket(teams):
+
+    if len(teams) == 16:
+        currentRound = 1
+    if len(teams) == 18:
+        currentRound = 2
+    if len(teams) == 14:
+        currentRound = 3
+    if len(teams) == 12:
+        currentRound = 4
+    if len(teams) == 1:
+        print("The winner of the tournament is :" + teams.items())
+
+
     teamsbyRating= list(teams.values())
     lowSeed = []
     highSeed = []
@@ -102,49 +176,22 @@ def createBracket():
     for i in range(len(teamsbyRating)):
         num = int(teamsbyRating[i])
         teamsbyRating[i] = num
-
     teamsbyRating.sort()
-    print(teamsbyRating)
-
     for j in teamsbyRating:
         team = findTeam(j)
         sortedTeams[team] = j
 
-    print(sortedTeams)
     length = len(teamsbyRating)-1
     counter=0
     matches = int(len(teamsbyRating) / 2)
     #organicaly create bracket for whathever round we are in .
     # i need to get the key .
+    teams = list(sortedTeams.keys())
+    ratings= list(sortedTeams.values())
+
     for i in range(matches):
-        key = int(sortedTeams.get[])
-        value= int(sortedTeams[length])
-        print(key)
-        bracket[key] = bracket[value]
+        bracket.update({ratings[i]: ratings[length]})
         length =length-1
-
-
-
-    print(lowSeed)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
 
 def findTeam(rating):
     team=""
@@ -154,11 +201,6 @@ def findTeam(rating):
              team= key
              break
     return team
-
-
-
-
-
 
 
 def main():
